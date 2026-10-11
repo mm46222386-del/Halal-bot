@@ -13,3 +13,5 @@ jobs:
           python-version: '3.11'
       - run: pip install yfinance requests
       - run: python bot.py
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
