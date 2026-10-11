@@ -1,8 +1,6 @@
 name: Halal Bot
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/15 * * * *'
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -11,5 +9,4 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Run bot
-        run: python bot.py
+      - run: python bot.py
