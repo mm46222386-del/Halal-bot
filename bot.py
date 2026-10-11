@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 
 TOKEN = "8930031913:AAGAFxEml5LMrDCDa5w1RQpUn5zs2wxgALg"
-CHAT_ID = "8930031913"
+    CHAT_ID = "8628332432"
 
 HALAL = ["AAPL","MSFT","GOOGL","AMZN","TSLA","NVDA","META","NFLX","ADBE","AVGO"]
 
