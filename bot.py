@@ -4,16 +4,20 @@ import os
 from datetime import datetime
 
 TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID = "8628332432"
+CHAT_ID = "1887062091"
 
 HALAL = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "META", "ADBE", "AVGO", "ORCL"]
 
 def send(msg):
+    if not TOKEN:
+        print("ERROR: BOT_TOKEN is missing!")
+        return
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     try:
-        requests.post(url, data={"chat_id": CHAT_ID, "text": msg}, timeout=10)
-    except:
-        pass
+        r = requests.post(url, data={"chat_id": CHAT_ID, "text": msg}, timeout=10)
+        print(f"Telegram response: {r.text}")
+    except Exception as e:
+        print(f"Error: {e}")
 
 found = False
 now = datetime.now().strftime("%H:%M")
@@ -29,7 +33,8 @@ for ticker in HALAL:
         if abs(gap) >= 2.5:
             send(f"🚀 فجوة حلال! {ticker} الفجوة: {gap:.2f}% السعر: ${open_price:.2f}")
             found = True
-    except:
+    except Exception as e:
+        print(f"Error {ticker}: {e}")
         continue
 
 if not found:
