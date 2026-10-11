@@ -1,9 +1,0 @@
-name: Halal Bot
-on:
-  workflow_dispatch:
-jobs:
-  run:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: python bot.py
