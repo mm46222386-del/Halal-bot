@@ -1,25 +1,33 @@
-import urllib.request, json, ssl
-ssl._create_default_https_context = ssl._create_unverified_context
-TOKEN="8930031913:AAGAFxEml5LMrDCDa5w1RQpUn5zs2wxgALg"
-CHAT_ID="1887062091"
-def send(t):
- try:
-  d=json.dumps({"chat_id":CHAT_ID,"text":t}).encode()
-  r=urllib.request.Request(f"https://api.telegram.org/bot{TOKEN}/sendMessage",data=d,headers={"Content-Type":"application/json"})
-  urllib.request.urlopen(r,timeout=10)
- except: pass
-def gap(s):
- try:
-  url=f"https://query1.finance.yahoo.com/v8/finance/chart/{s}?interval=5m&range=1d"
-  req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
-  with urllib.request.urlopen(req,timeout=10) as rr:
-   c=[x for x in json.loads(rr.read())['chart']['result'][0]['indicators']['quote'][0]['close'] if x]
-   if len(c)>=2:
-    return (c[-1]-c[-2])/c[-2]*100,c[-1]
- except: pass
- return 0,0
-HALAL=["AAPL","MSFT","NVDA","GOOGL","META","AMD","AVGO","COST","ADBE","QCOM"]
-for s in HALAL:
- g,p=gap(s)
- if g>=2.5:
-  send(f"🚀 {s} فجوة حلال +{g:.2f}% - ${p:.2f}")
+import yfinance as yf
+import requests
+import os
+from datetime import datetime
+
+TOKEN = "YOUR_BOT_TOKEN"
+CHAT_ID = "YOUR_CHAT_ID"
+
+HALAL = ["AAPL","MSFT","GOOGL","AMZN","TSLA","NVDA","META","NFLX","ADBE","AVGO"]
+
+def send(msg):
+    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+    requests.post(url, data={"chat_id": CHAT_ID, "text": msg})
+
+found = False
+now = datetime.now().strftime("%H:%M")
+for ticker in HALAL:
+    try:
+        data = yf.download(ticker, period="2d", interval="1d", progress=False)
+        if len(data) < 2: continue
+        prev_close = float(data['Close'].iloc[-2])
+        open_price = float(data['Open'].iloc[-1])
+        gap = ((open_price - prev_close) / prev_close) * 100
+        if abs(gap) >= 2.5:
+            send(f"🚀 فجوة حلال! سهم: {ticker} فجوة: {gap:.2f}% سعر: ${open_price:.2f}")
+            found = True
+    except:
+        continue
+
+if not found:
+    send(f"✅ تم الفحص الساعة {now} - لا يوجد فجوات حاليا\nيراقب 10 أسهم حلال")
+else:
+    send(f"✅ الفحص اكتمل الساعة {now}")
