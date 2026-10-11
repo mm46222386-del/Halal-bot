@@ -1,8 +1,9 @@
 import yfinance as yf
 import requests
+import os
 from datetime import datetime
 
-TOKEN = "8930031913:AAGAFxEmI5LMrDCDa5w1XbN8xLQeP0o7r7sT6vU"
+TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = "8628332432"
 
 HALAL = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "META", "ADBE", "AVGO", "ORCL"]
@@ -10,14 +11,12 @@ HALAL = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "META", "ADBE", "AVGO"
 def send(msg):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     try:
-        r = requests.post(url, data={"chat_id": CHAT_ID, "text": msg}, timeout=10)
-        print(r.text)
-    except Exception as e:
-        print(f"Error sending: {e}")
+        requests.post(url, data={"chat_id": CHAT_ID, "text": msg}, timeout=10)
+    except:
+        pass
 
 found = False
 now = datetime.now().strftime("%H:%M")
-log_msg = ""
 
 for ticker in HALAL:
     try:
@@ -30,11 +29,8 @@ for ticker in HALAL:
         if abs(gap) >= 2.5:
             send(f"🚀 فجوة حلال! {ticker} الفجوة: {gap:.2f}% السعر: ${open_price:.2f}")
             found = True
-    except Exception as e:
-        print(f"{ticker} error: {e}")
+    except:
         continue
 
 if not found:
     send(f"✅ تم الفحص الساعة {now} - لا يوجد فجوات حاليا\nيراقب {len(HALAL)} أسهم حلال")
-else:
-    send(f"✅ الفحص اكتمل الساعة {now}")
