@@ -3,8 +3,8 @@ import requests
 import os
 from datetime import datetime
 
-TOKEN = "YOUR_BOT_TOKEN"
-CHAT_ID = "YOUR_CHAT_ID"
+TOKEN = "8930031913:AAGAFxEml5LMrDCDa5w1RQpUn5zs2wxgALg"
+CHAT_ID = "8930031913"
 
 HALAL = ["AAPL","MSFT","GOOGL","AMZN","TSLA","NVDA","META","NFLX","ADBE","AVGO"]
 
